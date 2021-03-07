@@ -20,10 +20,20 @@ export const getStaticProps = async () => {
   const jsonData = await fs.readFile(filePath);
   const data = JSON.parse(jsonData);
 
+  if (data.products.length === 0) {
+    return {
+      notFound: true // if true show 404 page
+    };
+  }
+
   return {
     props: {
       products: data.products
     },
-    revalidate: 10 // regenerate page in seconds
+    revalidate: 10, // regenerate page in seconds
+    notFound: true, // if true show 404 page
+    // redirect: {
+    //   destination: '/no-data'
+    // }
   };
 };
