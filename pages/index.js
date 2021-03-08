@@ -1,11 +1,14 @@
 import path from 'path';
 import fs from 'fs/promises';
+import Link from 'next/link';
 
 function HomePage({ products }) {
   return (
     <ul>
       {products.map(({ id, title }) => (
-        <li key={id}>{title}</li>
+        <Link key={id} href={`/${id}`}>
+          <li>{title}</li>
+        </Link>
       ))}
     </ul>
   );
@@ -30,8 +33,8 @@ export const getStaticProps = async () => {
     props: {
       products: data.products
     },
-    revalidate: 10, // regenerate page in seconds
-    notFound: true, // if true show 404 page
+    revalidate: 10 // regenerate page in seconds
+    // notFound: true, // if true show 404 page
     // redirect: {
     //   destination: '/no-data'
     // }
