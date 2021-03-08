@@ -27,6 +27,14 @@ export const getStaticProps = async ({ params }) => {
   const data = await getData();
   const product = data.products.find(elem => elem.id === params.pid);
 
+  if (!product) {
+    return {
+      notFound: true
+    };
+  }
+  // use together with fallback: true / fallback: 'blocking' 
+  // if no data found redirect to 404
+
   return {
     props: {
       product: product
