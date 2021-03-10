@@ -1,26 +1,45 @@
 import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
 const LastSales = () => {
   const [sales, setSales] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
+
+  const { data, error } = useSWR(
+    'https://next-backend-default-rtdb.firebaseio.com/sales.json'
+  );
 
   useEffect(() => {
-    setIsLoading(true);
-    fetch('https://next-backend-default-rtdb.firebaseio.com/sales.json')
-      .then(res => res.json())
-      .then(data => {
-        const transformedData = [];
+    const transformedData = [];
 
-        for (const key in data) {
-          transformedData.push({ id: key, data: data[key] });
-        }
+    for (const key in data) {
+      transformedData.push({ id: key, data: data[key] });
+    }
 
-        setSales(transformedData);
-        setIsLoading(false);
-      });
-  }, []);
+    setSales(transformedData);
+  }, [data]);
 
-  if (isLoading || !sales.length) {
+  // useEffect(() => {
+  //   setIsLoading(true);
+  //   fetch('https://next-backend-default-rtdb.firebaseio.com/sales.json')
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       const transformedData = [];
+
+  //       for (const key in data) {
+  //         transformedData.push({ id: key, data: data[key] });
+  //       }
+
+  //       setSales(transformedData);
+  //       setIsLoading(false);
+  //     });
+  // }, []);
+
+  if (error) {
+    return <div>Error loading data</div>;
+  }
+
+  if (!data) {
     return <div>Loading...</div>;
   }
 
