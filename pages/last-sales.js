@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
-const LastSales = () => {
+const LastSales = ({ salesData }) => {
   const [sales, setSales] = useState([]);
   // const [isLoading, setIsLoading] = useState(false);
 
@@ -52,6 +52,25 @@ const LastSales = () => {
       ))}
     </ul>
   );
+};
+
+export const getStaticProps = async () => {
+  return fetch('https://next-backend-default-rtdb.firebaseio.com/sales.json')
+    .then(res => res.json())
+    .then(data => {
+      const transformedData = [];
+
+      for (const key in data) {
+        transformedData.push({ id: key, data: data[key] });
+      }
+
+      return {
+        props: {
+          salesData: transformedData
+        },
+        revalidate: 10
+      };
+    });
 };
 
 export default LastSales;
